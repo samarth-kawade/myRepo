@@ -3,11 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
+    <title>TaskHub - Task Management App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Hello World</h1>
-    <p>This is a basic HTML page linked to style.css.</p>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">TaskHub</h1>
+            <p class="tagline">Manage your tasks efficiently</p>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Welcome to TaskHub</h2>
+            <p>Keep track of your daily tasks and boost your productivity</p>
+        </section>
+
+        <section class="task-section">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Add a new task..." />
+                <button id="addBtn" class="btn btn-primary">Add Task</button>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <ul id="taskList" class="task-list"></ul>
+
+            <div class="task-stats">
+                <p>Total Tasks: <span id="totalCount">0</span></p>
+                <p>Completed: <span id="completedCount">0</span></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 TaskHub. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
