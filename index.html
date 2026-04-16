@@ -26,11 +26,19 @@
                 <button id="addBtn" class="btn btn-primary">Add Task</button>
             </div>
 
+            <div class="action-buttons">
+                <button id="exportBtn" class="btn btn-secondary">Export</button>
+                <button id="importBtn" class="btn btn-secondary">Import</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear All</button>
+            </div>
+
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="active">Active</button>
                 <button class="filter-btn" data-filter="completed">Completed</button>
             </div>
+
+            <input type="file" id="importFile" accept=".json" style="display: none;" />
 
             <ul id="taskList" class="task-list"></ul>
 

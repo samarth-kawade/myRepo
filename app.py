@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Simple Python Application
-A basic task management application with file persistence
+Task Manager Application
+Syncs with TaskHub web application via JSON files
 """
 
 import json
@@ -10,14 +10,14 @@ from datetime import datetime
 
 
 class TaskManager:
-    """Manages tasks with file persistence"""
+    """Manages tasks with file persistence (compatible with TaskHub web app)"""
 
     def __init__(self, filename='tasks.json'):
         self.filename = filename
         self.tasks = self.load_tasks()
 
     def load_tasks(self):
-        """Load tasks from JSON file"""
+        """Load tasks from JSON file (compatible with web app format)"""
         if os.path.exists(self.filename):
             try:
                 with open(self.filename, 'r') as f:
@@ -31,14 +31,12 @@ class TaskManager:
         with open(self.filename, 'w') as f:
             json.dump(self.tasks, f, indent=2)
 
-    def add_task(self, title, description=''):
-        """Add a new task"""
+    def add_task(self, text, completed=False):
+        """Add a new task (compatible with web app format)"""
         task = {
-            'id': len(self.tasks) + 1,
-            'title': title,
-            'description': description,
-            'completed': False,
-            'created_at': datetime.now().isoformat(),
+            'id': int(datetime.now().timestamp() * 1000),
+            'text': text,
+            'completed': completed,
         }
         self.tasks.append(task)
         self.save_tasks()
@@ -59,9 +57,7 @@ class TaskManager:
                 continue
 
             status = "✓" if task['completed'] else "○"
-            print(f"{status} [{task['id']}] {task['title']}")
-            if task['description']:
-                print(f"    {task['description']}")
+            print(f"{status} [{task['id']}] {task['text']}")
 
     def complete_task(self, task_id):
         """Mark task as complete"""
@@ -92,8 +88,9 @@ def main():
     manager = TaskManager()
 
     print("\n" + "=" * 60)
-    print("WELCOME TO TASK MANAGER")
+    print("TASK MANAGER - Synced with TaskHub Web App")
     print("=" * 60)
+    print(f"Data file: {manager.filename}")
 
     while True:
         print("\nOptions:")
@@ -107,10 +104,12 @@ def main():
         choice = input("\nSelect an option (1-6): ").strip()
 
         if choice == '1':
-            title = input("Enter task title: ").strip()
-            description = input("Enter description (optional): ").strip()
-            task = manager.add_task(title, description)
-            print(f"Task added: {task['title']}")
+            text = input("Enter task: ").strip()
+            if text:
+                task = manager.add_task(text)
+                print(f"✓ Task added: {task['text']}")
+            else:
+                print("Task cannot be empty.")
 
         elif choice == '2':
             manager.list_tasks()

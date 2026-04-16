@@ -8,12 +8,21 @@ const taskList = document.getElementById('taskList');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const totalCount = document.getElementById('totalCount');
 const completedCount = document.getElementById('completedCount');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const clearBtn = document.getElementById('clearBtn');
+const importFile = document.getElementById('importFile');
 
 // Event listeners
 addBtn.addEventListener('click', addTask);
 taskInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') addTask();
 });
+
+exportBtn.addEventListener('click', exportTasks);
+importBtn.addEventListener('click', () => importFile.click());
+importFile.addEventListener('change', handleFileImport);
+clearBtn.addEventListener('click', clearAllTasks);
 
 filterBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -122,3 +131,49 @@ function escapeHtml(text) {
 
 // Initial render
 renderTasks();
+
+// Export tasks as JSON
+function exportTasks() {
+    const dataStr = JSON.stringify(tasks, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tasks-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+// Import tasks from JSON file
+function handleFileImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const importedTasks = JSON.parse(event.target.result);
+            if (Array.isArray(importedTasks)) {
+                tasks = importedTasks;
+                saveTasks();
+                renderTasks();
+                alert('Tasks imported successfully!');
+            } else {
+                alert('Invalid file format. Please export from TaskHub.');
+            }
+        } catch (error) {
+            alert('Error reading file: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+// Clear all tasks
+function clearAllTasks() {
+    if (confirm('Are you sure you want to delete all tasks? This cannot be undone.')) {
+        tasks = [];
+        saveTasks();
+        renderTasks();
+    }
+}
